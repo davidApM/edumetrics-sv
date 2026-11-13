@@ -95,7 +95,12 @@
                                     <td class="px-6 py-4 text-center text-gray-600">
                                         {{ $assessment->scores_count }} registradas
                                     </td>
-                                    <td class="px-6 py-4 text-right space-x-2">
+                                    <td class="px-6 py-4 text-right space-x-3">
+                                        <a href="{{ route('assessments.scores.edit', $assessment) }}"
+                                           class="text-indigo-600 hover:text-indigo-900 font-semibold text-xs uppercase">
+                                            Calificar
+                                        </a>
+
                                         <form method="POST" action="{{ route('assessments.destroy', $assessment) }}" class="inline"
                                               onsubmit="return confirm('¿Eliminar esta evaluación y sus calificaciones asociadas?');">
                                             @csrf
