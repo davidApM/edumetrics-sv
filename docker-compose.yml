@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: edumetrics_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: edumetrics
+      POSTGRES_USER: david_admin
+      POSTGRES_PASSWORD: secret_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
