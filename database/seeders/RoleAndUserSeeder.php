@@ -35,5 +35,16 @@ class RoleAndUserSeeder extends Seeder
             ]
         );
         $docente->assignRole($docenteRole);
+
+        // Usuario Coordinador Académico de prueba
+        $coordinador = User::firstOrCreate(
+            ['email' => 'coordinador@edumetrics.sv'],
+            [
+                'name' => 'Lic. Elena Martínez (Coordinadora)',
+                'password' => Hash::make('Password123!'),
+            ]
+        );
+        $coordinador->assignRole($coordRole);
+
     }
 }
