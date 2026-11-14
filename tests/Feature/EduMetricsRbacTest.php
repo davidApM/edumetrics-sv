@@ -103,4 +103,29 @@ class EduMetricsRbacTest extends TestCase
             ->get(route('students.create'))
             ->assertOk();
     }
+
+    public function test_admin_can_create_teacher_credentials_and_docente_cannot_access_teachers_module(): void
+    {
+        $docente = User::factory()->create();
+        $docente->assignRole(Role::firstOrCreate(['name' => 'docente']));
+
+        $this->actingAs($docente)
+            ->get(route('teachers.index'))
+            ->assertForbidden();
+
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::firstOrCreate(['name' => 'admin']));
+
+        $this->actingAs($admin)
+            ->post(route('teachers.store'), [
+                'name' => 'Prof. Laura Rivas',
+                'email' => 'lrivas@edumetrics.sv',
+                'password' => 'ClaveSegura2026',
+                'password_confirmation' => 'ClaveSegura2026',
+            ])
+            ->assertRedirect(route('teachers.index'));
+
+        $createdTeacher = User::where('email', 'lrivas@edumetrics.sv')->firstOrFail();
+        $this->assertTrue($createdTeacher->hasRole('docente'));
+    }
 }

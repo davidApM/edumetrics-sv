@@ -4,7 +4,6 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                <!-- Logo modificado-->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" class="flex items-center">
                         <x-application-logo />
@@ -26,6 +25,9 @@
                         {{ __('Estudiantes') }}
                     </x-nav-link>
                     @hasanyrole('admin|coordinador')
+                    <x-nav-link :href="route('teachers.index')" :active="request()->routeIs('teachers.*')">
+                        {{ __('Docentes') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('academic.index')" :active="request()->routeIs('academic.*')">
                         {{ __('Gestión Académica') }}
                     </x-nav-link>
@@ -95,6 +97,9 @@
                 {{ __('Estudiantes') }}
             </x-responsive-nav-link>
             @hasanyrole('admin|coordinador')
+            <x-responsive-nav-link :href="route('teachers.index')" :active="request()->routeIs('teachers.*')">
+                {{ __('Docentes') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('academic.index')" :active="request()->routeIs('academic.*')">
                 {{ __('Gestión Académica') }}
             </x-responsive-nav-link>
