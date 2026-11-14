@@ -175,4 +175,89 @@ class GradeCalculationService
             'planned_weight' => round($plannedWeight, 2),
         ];
     }
+
+/**
+     * Genera la boleta consolidada de un estudiante en todas las materias de su grado.
+     */
+    public function buildStudentReportCard(Student $student, Collection $periods): array
+    {
+        $section = Section::with('gradeLevel')->findOrFail($student->section_id);
+
+        $subjects = Subject::with('teacher')
+            ->where('grade_level_id', $section->grade_level_id)
+            ->orderBy('name')
+            ->get();
+
+        $assessmentsBySubjectAndPeriod = Assessment::with([
+            'scores' => fn ($q) => $q->where('student_id', $student->id),
+        ])
+            ->where('section_id', $section->id)
+            ->whereIn('subject_id', $subjects->pluck('id'))
+            ->whereIn('period_id', $periods->pluck('id'))
+            ->get()
+            ->groupBy(['subject_id', 'period_id']);
+
+        $subjectRows = $subjects->map(function (Subject $subject) use ($periods, $assessmentsBySubjectAndPeriod) {
+            $periodScores = [];
+            $annualGrade = 0.0;
+
+            foreach ($periods as $period) {
+                $assessments = $assessmentsBySubjectAndPeriod
+                    ->get($subject->id, collect())
+                    ->get($period->id, collect());
+
+                $accumulated = 0.0;
+                $hasScores = false;
+
+                foreach ($assessments as $assessment) {
+                    $scoreRecord = $assessment->scores->first();
+                    if ($scoreRecord !== null) {
+                        $hasScores = true;
+                        $accumulated += ((float) $scoreRecord->score) * (((float) $assessment->weight_percentage) / 100);
+                    }
+                }
+
+                $roundedPeriod = round($accumulated, 2);
+                $contribution = $roundedPeriod * (((float) $period->weight_percentage) / 100);
+                $annualGrade += $contribution;
+
+                $periodScores[$period->id] = [
+                    'grade' => $roundedPeriod,
+                    'has_scores' => $hasScores,
+                ];
+            }
+
+            $finalGrade = round($annualGrade, 2);
+
+            return [
+                'subject' => $subject,
+                'periods' => $periodScores,
+                'final_grade' => $finalGrade,
+                'passed' => $finalGrade >= self::PASSING_GRADE,
+            ];
+        });
+
+        $generalAverage = $subjectRows->isNotEmpty()
+            ? round((float) $subjectRows->avg('final_grade'), 2)
+            : 0.00;
+
+        return [
+            'student' => $student,
+            'section' => $section,
+            'periods' => $periods,
+            'subjects' => $subjectRows,
+            'general_average' => $generalAverage,
+            'approved_subjects' => $subjectRows->where('passed', true)->count(),
+            'failed_subjects' => $subjectRows->where('passed', false)->count(),
+        ];
+    }
+
+
+
+
+
 }
+
+
+
+

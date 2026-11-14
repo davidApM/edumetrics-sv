@@ -4,6 +4,7 @@ use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\AssessmentScoreController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GradebookController;
+use App\Http\Controllers\GradebookReportController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('gradebook', [GradebookController::class, 'index'])
         ->name('gradebook.index');
+
+    Route::get('gradebook/export/section', [GradebookReportController::class, 'sectionPdf'])
+        ->name('gradebook.export.section');
+    Route::get('gradebook/export/student/{student}', [GradebookReportController::class, 'studentPdf'])
+        ->name('gradebook.export.student');
 });
 
 require __DIR__.'/auth.php';

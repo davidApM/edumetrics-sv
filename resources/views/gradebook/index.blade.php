@@ -12,11 +12,23 @@
                 @endif
             </div>
 
-            @if ($selectedSubject)
-                <a href="{{ route('assessments.index', ['subject_id' => $selectedSubject->id, 'period_id' => $selectedPeriod?->id]) }}"
-                   class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">
-                    Gestionar Evaluaciones
-                </a>
+            @if ($selectedSubject && $selectedSection)
+                <div class="flex flex-wrap items-center gap-2">
+                    <a href="{{ route('gradebook.export.section', [
+                        'subject_id' => $selectedSubject->id,
+                        'section_id' => $selectedSection->id,
+                        'period_id' => $isAnnualMode ? 'annual' : $selectedPeriod?->id,
+                    ]) }}"
+                       target="_blank"
+                       class="inline-flex items-center px-4 py-2 bg-rose-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-rose-700 transition">
+                        Exportar Acta PDF
+                    </a>
+
+                    <a href="{{ route('assessments.index', ['subject_id' => $selectedSubject->id, 'period_id' => $selectedPeriod?->id]) }}"
+                       class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">
+                        Gestionar Evaluaciones
+                    </a>
+                </div>
             @endif
         </div>
     </x-slot>
@@ -168,7 +180,14 @@
                                         <tr class="hover:bg-gray-50">
                                             <td class="px-4 py-3 text-gray-500">{{ $index + 1 }}</td>
                                             <td class="px-4 py-3 font-mono text-xs text-gray-600">{{ $row['student']->nie }}</td>
-                                            <td class="px-4 py-3 font-medium text-gray-900">{{ $row['student']->full_name }}</td>
+                                            <td class="px-4 py-3 font-medium text-gray-900">
+                                                {{ $row['student']->full_name }}
+                                                <a href="{{ route('gradebook.export.student', $row['student']) }}"
+                                                   target="_blank"
+                                                   class="ml-2 inline-block text-[11px] font-semibold text-rose-600 hover:underline">
+                                                    [Boleta PDF]
+                                                </a>
+                                            </td>
 
                                             @foreach ($matrix['assessments'] as $assessment)
                                                 @php
@@ -252,7 +271,14 @@
                                         <tr class="hover:bg-gray-50">
                                             <td class="px-4 py-3 text-gray-500">{{ $index + 1 }}</td>
                                             <td class="px-4 py-3 font-mono text-xs text-gray-600">{{ $row['student']->nie }}</td>
-                                            <td class="px-4 py-3 font-medium text-gray-900">{{ $row['student']->full_name }}</td>
+                                            <td class="px-4 py-3 font-medium text-gray-900">
+                                                {{ $row['student']->full_name }}
+                                                <a href="{{ route('gradebook.export.student', $row['student']) }}"
+                                                   target="_blank"
+                                                   class="ml-2 inline-block text-[11px] font-semibold text-rose-600 hover:underline">
+                                                    [Boleta PDF]
+                                                </a>
+                                            </td>
 
                                             @foreach ($matrix['periods'] as $period)
                                                 @php
