@@ -1,59 +1,68 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# EduMetrics SV — Plataforma de Gestión Académica y Calificaciones
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema web de control escolar, registro de evaluaciones y cálculo automatizado de calificaciones diseñado bajo los lineamientos evaluativos del Ministerio de Educación de El Salvador (**MINED**).
 
-## About Laravel
+## Stack Tecnológico
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* **Backend:** PHP 8.3 · Laravel 11
+* **Base de Datos:** PostgreSQL 16
+* **Frontend:** Blade · Tailwind CSS · Alpine.js
+* **Seguridad y Roles:** Spatie Laravel Permission (RBAC)
+* **Reportes Oficiales:** Barryvdh Laravel DomPDF
+* **Pruebas Automatizadas:** PHPUnit / Pest (Feature & Unit Tests)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Reglas de Negocio y Normativa MINED
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* **Estructura Evaluativa:** Año lectivo dividido en **4 períodos** con ponderación del **25.00 %** cada uno (validación estricta de suma exacta al 100.00 %).
+* **Cálculo Ponderado:** Promedio por período calculado dinámicamente según el porcentaje asignado a cada actividad evaluada (tareas, laboratorios, exámenes).
+* **Criterio de Aprobación:** Escala de `0.00` a `10.00` con nota mínima de aprobación de **`6.00`**.
+* **Control de Acceso por Rol (RBAC):**
+  * **Administrador / Coordinador:** Gestión integral de asignaturas, asignación de carga docente, apertura de secciones, configuración de períodos, matrícula de estudiantes y consulta global de cuadros/actas.
+  * **Docente:** Acceso restringido exclusivamente a las asignaturas y secciones bajo su titularidad para crear evaluaciones, digitar notas y exportar sus cuadros de calificación.
 
-## Learning Laravel
+## Módulos Principales
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+1. **Dashboard Analítico:** Indicadores de matrícula activa, tasa de aprobación, promedio institucional y monitoreo de secciones sin actividad.
+2. **Evaluaciones y Digitación de Notas:** Creación de actividades con validación de peso por período y captura masiva de calificaciones.
+3. **Cuadro de Notas y Reportes PDF:** Consolidado por sección/asignatura con exportación oficial en PDF de **Actas de Calificación** y **Boletas Individuales**.
+4. **Directorio y Matrícula Estudiantil:** Registro con validación única de **NIE**, edición de ficha y control de estado activo/inactivo preservando el historial académico.
+5. **Gestión Académica:** Administración de materias, asignación de docentes titulares, creación de secciones y ajuste de ponderaciones por período.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Instalación Local
 
-## Laravel Sponsors
+```bash
+git clone https://github.com/davidApM/edumetrics-sv.git
+cd edumetrics-sv
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Configura las credenciales de **PostgreSQL 16** en el archivo `.env` y ejecuta:
 
-### Premium Partners
+```bash
+php artisan migrate --seed
+npm run build
+php artisan serve
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Credenciales de Prueba (Datos Semilla)
 
-## Contributing
+| Rol | Correo Electrónico | Contraseña |
+| :--- | :--- | :--- |
+| **Administrador** | `admin@edumetrics.sv` | `password` |
+| **Coordinador** | `coordinador@edumetrics.sv` | `password` |
+| **Docente** | `docente@edumetrics.sv` | `password` |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Pruebas Automatizadas
 
-## Code of Conduct
+El proyecto incluye 33 pruebas automatizadas que verifican los bloqueos `403` entre roles, la unicidad de NIE, la integridad de ponderaciones al 100 % y la generación de documentos PDF:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan test
+```
 
-## Security Vulnerabilities
+## Autor
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Desarrollado por **David** (`@davidApM`) — El Salvador.
