@@ -15,12 +15,14 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                <!-- Nuevo boton-->   
                     <x-nav-link :href="route('assessments.index')" :active="request()->routeIs('assessments.*')">
                         {{ __('Evaluaciones') }}
                     </x-nav-link>
                     <x-nav-link :href="route('gradebook.index')" :active="request()->routeIs('gradebook.*')">
                         {{ __('Cuadro de Notas') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
+                        {{ __('Estudiantes') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -77,12 +79,14 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <!-- Responsive dos botones -->
             <x-responsive-nav-link :href="route('assessments.index')" :active="request()->routeIs('assessments.*')">
                 {{ __('Evaluaciones') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('gradebook.index')" :active="request()->routeIs('gradebook.*')">
                 {{ __('Cuadro de Notas') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
+                {{ __('Estudiantes') }}
             </x-responsive-nav-link>
         </div>
 

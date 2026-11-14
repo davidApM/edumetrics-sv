@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GradebookController;
 use App\Http\Controllers\GradebookReportController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,6 +21,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::resource('students', StudentController::class)
+        ->only(['index', 'create', 'store', 'edit', 'update']);
+    Route::patch('students/{student}/toggle-status', [StudentController::class, 'toggleStatus'])
+        ->name('students.toggle-status');
 
     Route::resource('assessments', AssessmentController::class)
         ->only(['index', 'create', 'store', 'destroy']);

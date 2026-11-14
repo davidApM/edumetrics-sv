@@ -8,12 +8,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Student extends Model
 {
-    protected $fillable = ['nie', 'first_name', 'last_name', 'section_id', 'is_active'];
+    protected $fillable = [
+        'nie',
+        'first_name',
+        'last_name',
+        'section_id',
+        'is_active',
+    ];
 
-    protected function casts(): array
-    {
-        return ['is_active' => 'boolean'];
-    }
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
 
     public function section(): BelongsTo
     {
