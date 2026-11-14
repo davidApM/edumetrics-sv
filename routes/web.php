@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\AssessmentScoreController;
+use App\Http\Controllers\GradebookController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,12 +22,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('assessments', AssessmentController::class)
         ->only(['index', 'create', 'store', 'destroy']);
 
-    //Nuevas rutas para la edición y actualización de calificaciones de evaluaciones    
     Route::get('assessments/{assessment}/scores', [AssessmentScoreController::class, 'edit'])
         ->name('assessments.scores.edit');
     Route::put('assessments/{assessment}/scores', [AssessmentScoreController::class, 'update'])
         ->name('assessments.scores.update');
 
+    Route::get('gradebook', [GradebookController::class, 'index'])
+        ->name('gradebook.index');
 });
 
 require __DIR__.'/auth.php';
