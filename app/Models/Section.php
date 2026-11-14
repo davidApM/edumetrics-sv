@@ -8,12 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Section extends Model
 {
-    protected $fillable = ['academic_year_id', 'grade_level_id', 'name', 'capacity'];
-
-    public function academicYear(): BelongsTo
-    {
-        return $this->belongsTo(AcademicYear::class);
-    }
+    protected $fillable = [
+        'name',
+        'grade_level_id',
+        'academic_year_id',
+    ];
 
     public function gradeLevel(): BelongsTo
     {
@@ -22,7 +21,7 @@ class Section extends Model
 
     public function students(): HasMany
     {
-        return $this->hasMany(Student::class)->orderBy('last_name');
+        return $this->hasMany(Student::class);
     }
 
     public function assessments(): HasMany

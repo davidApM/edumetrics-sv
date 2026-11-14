@@ -24,6 +24,11 @@
                     <x-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
                         {{ __('Estudiantes') }}
                     </x-nav-link>
+                    @hasanyrole('admin|coordinador')
+                        <x-nav-link :href="route('academic.index')" :active="request()->routeIs('academic.*')">
+                            {{ __('Gestión Académica') }}
+                        </x-nav-link>
+                    @endhasanyrole
                 </div>
             </div>
 
@@ -88,6 +93,11 @@
             <x-responsive-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
                 {{ __('Estudiantes') }}
             </x-responsive-nav-link>
+            @hasanyrole('admin|coordinador')
+                <x-responsive-nav-link :href="route('academic.index')" :active="request()->routeIs('academic.*')">
+                    {{ __('Gestión Académica') }}
+                </x-responsive-nav-link>
+            @endhasanyrole
         </div>
 
         <!-- Responsive Settings Options -->
